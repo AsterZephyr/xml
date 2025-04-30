@@ -1,0 +1,63 @@
+<mxfile host="app.diagrams.net" modified="2024-03-15T11:15:00.000Z" agent="ManualCorrectXML" etag="valid-drawio-xml-arch-1" version="24.0.4" type="device">
+    <diagram name="Ad-Event-System-Arch" id="DiagramLayer1">
+      <mxGraphModel dx="1468" dy="765" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <root>
+          <mxCell id="0" />
+          <mxCell id="1" parent="0" />
+          <mxCell id="comp-sources" value="Event Sources&lt;br&gt;(Browsers, Apps)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+            <mxGeometry x="40" y="160" width="120" height="60" as="geometry" />
+          </mxCell>
+          <mxCell id="comp-collection" value="Data Collection&lt;br&gt;(Ingestion Layer)&lt;br&gt;&lt;i&gt;e.g., Kafka&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="220" y="160" width="120" height="70" as="geometry" />
+          </mxCell>
+          <mxCell id="comp-processing" value="Data Processing&lt;br&gt;(Real-time Aggregation)&lt;br&gt;&lt;i&gt;e.g., Flink&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="400" y="160" width="130" height="70" as="geometry" />
+          </mxCell>
+          <mxCell id="comp-storage" value="Data Storage&lt;br&gt;(Aggregated Data)&lt;br&gt;&lt;i&gt;e.g., ClickHouse, Doris&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="590" y="160" width="130" height="70" as="geometry" />
+          </mxCell>
+          <mxCell id="comp-api" value="Query API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="780" y="160" width="120" height="60" as="geometry" />
+          </mxCell>
+          <mxCell id="comp-consumers" value="Consumers&lt;br&gt;(Dashboard, Reports)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+            <mxGeometry x="960" y="160" width="120" height="60" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-1" value="Raw Events" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="comp-sources" target="comp-collection">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-2" value="Processed Events" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="comp-collection" target="comp-processing">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-3" value="Aggregated Metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="comp-processing" target="comp-storage">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-4" value="Query Results" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="comp-storage" target="comp-api">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-5" value="Query Request" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="comp-api" target="comp-consumers">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="comp-optional-path" value="Optional:&lt;br&gt;Raw Data Lake /&lt;br&gt;Batch Processing&lt;br&gt;(for Reconciliation)" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+            <mxGeometry x="400" y="300" width="130" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-opt-1" value="Raw Events&lt;br&gt;(Optional Storage/&lt;br&gt;Batch Input)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;dashed=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="comp-collection" target="comp-optional-path">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="280" y="245" as="sourcePoint" />
+              <mxPoint x="465" y="300" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+          <mxCell id="arrow-opt-2" value="Upsert/Correct&lt;br&gt;(Optional)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;dashed=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="comp-optional-path" target="comp-storage">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="530" y="340" as="sourcePoint" />
+              <mxPoint x="655" y="230" as="targetPoint" />
+              <Array as="points">
+                <mxPoint x="560" y="340" />
+                <mxPoint x="560" y="265" />
+                <mxPoint x="655" y="265" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </root>
+      </mxGraphModel>
+    </diagram>
+  </mxfile>

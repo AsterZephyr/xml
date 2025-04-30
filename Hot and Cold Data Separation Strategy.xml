@@ -1,0 +1,102 @@
+<mxfile host="app.diagrams.net" modified="2024-03-15T12:50:00.000Z" agent="OlapPartitionTieringGenerator" etag="olap-partition-tiering-1" version="24.0.4" type="device">
+    <diagram name="OLAP-Partition-Tiering" id="OlapPartitionDiagramLayer">
+      <mxGraphModel dx="1500" dy="1950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+        <root>
+          <mxCell id="0" />
+          <mxCell id="1" parent="0" />
+  
+          <mxCell id="title-olap" value="&lt;b&gt;数据存储层: OLAP 分区与冷热分离 (Partitioning &amp; Hot/Cold Tiering)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+            <mxGeometry x="250" y="1680" width="600" height="30" as="geometry" />
+          </mxCell>
+  
+          <mxCell id="olap-database" value="OLAP 数据库 (分钟级聚合表)&lt;br&gt;&lt;i&gt;e.g., ClickHouse Table (Partitioned by Month)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;verticalAlign=top;spacingTop=5;align=center;" vertex="1" parent="1">
+             <mxGeometry x="100" y="1740" width="900" height="300" as="geometry" />
+          </mxCell>
+  
+          <!-- Cold Data Partitions -->
+           <mxCell id="partition-cold-1" value="Partition:&lt;br&gt;2022-12" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6E6E6;strokeColor=#999999;" vertex="1" parent="1">
+             <mxGeometry x="120" y="1780" width="100" height="100" as="geometry" />
+           </mxCell>
+          <mxCell id="partition-cold-2" value="Partition:&lt;br&gt;2023-01" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6E6E6;strokeColor=#999999;" vertex="1" parent="1">
+             <mxGeometry x="230" y="1780" width="100" height="100" as="geometry" />
+           </mxCell>
+          <mxCell id="partition-cold-3" value="Partition:&lt;br&gt;... (更早)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6E6E6;strokeColor=#999999;dashed=1;" vertex="1" parent="1">
+              <mxGeometry x="340" y="1780" width="100" height="100" as="geometry" />
+          </mxCell>
+          <mxCell id="label-cold" value="&lt;b&gt;冷数据 (Cold Data)&lt;/b&gt;&lt;br&gt;存储在 HDD&lt;br&gt;(Stored on HDD)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+              <mxGeometry x="220" y="1890" width="150" height="50" as="geometry" />
+          </mxCell>
+          <mxCell id="icon-hdd" value="" style="shape=cylinder;html=1;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=top;fontSize=12;fontColor=#FFFFFF;resizable=0;points=[];shadow=0;strokeColor=none;size=10;spacingTop=8;fontStyle=1;fillColor=#A0A0A0;" vertex="1" parent="1">
+             <mxGeometry x="280" y="1945" width="30" height="40" as="geometry" />
+          </mxCell>
+  
+  
+          <!-- Warm Data Partition (Optional) -->
+           <mxCell id="partition-warm" value="Partition:&lt;br&gt;2024-01" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+             <mxGeometry x="480" y="1780" width="100" height="100" as="geometry" />
+           </mxCell>
+           <mxCell id="label-warm" value="&lt;b&gt;温数据 (Warm Data)&lt;/b&gt;&lt;br&gt;(可选分层)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#0066CC;" vertex="1" parent="1">
+               <mxGeometry x="460" y="1890" width="140" height="50" as="geometry" />
+           </mxCell>
+  
+           <!-- Hot Data Partitions -->
+           <mxCell id="partition-hot-month" value="Partition:&lt;br&gt;2024-02&lt;br&gt;(上个月)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+              <mxGeometry x="620" y="1780" width="100" height="100" as="geometry" />
+           </mxCell>
+          <mxCell id="partition-hot-week" value="Partition:&lt;br&gt;2024-03 W1&lt;br&gt;(最近7天)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+              <mxGeometry x="730" y="1780" width="100" height="100" as="geometry" />
+          </mxCell>
+          <mxCell id="partition-hot-today" value="Partition:&lt;br&gt;2024-03-15&lt;br&gt;&lt;b&gt;(今天)&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" vertex="1" parent="1">
+               <mxGeometry x="840" y="1780" width="100" height="100" as="geometry" />
+          </mxCell>
+          <mxCell id="label-hot" value="&lt;b&gt;热数据 (Hot Data)&lt;/b&gt;&lt;br&gt;存储在 SSD 或内存&lt;br&gt;(Stored on SSD &amp;#47; In-Memory)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#B85450;" vertex="1" parent="1">
+               <mxGeometry x="730" y="1890" width="180" height="50" as="geometry" />
+          </mxCell>
+          <mxCell id="icon-ssd" value="SSD" style="shape=datastore;whiteSpace=wrap;html=1;fontSize=10;fontStyle=1;fillColor=#FFFFFF;strokeColor=#B85450;" vertex="1" parent="1">
+               <mxGeometry x="800" y="1945" width="40" height="40" as="geometry" />
+          </mxCell>
+  
+  
+          <!-- Query Arrows -->
+          <mxCell id="query-recent" value="查询近期数据&lt;br&gt;(Query Recent Data)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+               <mxGeometry x="730" y="1730" width="150" height="30" as="geometry" />
+          </mxCell>
+           <mxCell id="arrow-query-recent" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#CC0000;strokeWidth=2;" edge="1" parent="1" target="partition-hot-today">
+             <mxGeometry width="50" height="50" relative="1" as="geometry">
+               <mxPoint x="890" y="1750" as="sourcePoint" />
+               <mxPoint x="900" y="1780" as="targetPoint" />
+             </mxGeometry>
+           </mxCell>
+            <mxCell id="arrow-query-recent2" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#CC0000;strokeWidth=2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="partition-hot-week">
+               <mxGeometry width="50" height="50" relative="1" as="geometry">
+                   <mxPoint x="780" y="1780" as="sourcePoint"/>
+                   <mxPoint x="810" y="1750" as="targetPoint"/>
+                   <Array as="points">
+                       <mxPoint x="780" y="1750"/>
+                   </Array>
+               </mxGeometry>
+           </mxCell>
+  
+          <mxCell id="query-old" value="查询历史数据&lt;br&gt;(Query Historical Data)" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" vertex="1" parent="1">
+              <mxGeometry x="180" y="1730" width="150" height="30" as="geometry" />
+          </mxCell>
+           <mxCell id="arrow-query-old" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#0000FF;" edge="1" parent="1">
+               <mxGeometry width="50" height="50" relative="1" as="geometry">
+                   <mxPoint x="280" y="1750" as="sourcePoint"/>
+                   <mxPoint x="280" y="1780" as="targetPoint"/>
+               </mxGeometry>
+           </mxCell>
+           <mxCell id="arrow-query-old2" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;strokeColor=#0000FF;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="partition-cold-1">
+                <mxGeometry width="50" height="50" relative="1" as="geometry">
+                    <mxPoint x="170" y="1780" as="sourcePoint"/>
+                    <mxPoint x="250" y="1750" as="targetPoint"/>
+                     <Array as="points">
+                       <mxPoint x="170" y="1750"/>
+                   </Array>
+                </mxGeometry>
+           </mxCell>
+  
+        </root>
+      </mxGraphModel>
+    </diagram>
+  </mxfile>

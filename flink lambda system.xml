@@ -1,0 +1,86 @@
+<mxfile host="app.diagrams.net" modified="2023-10-27T10:00:00.000Z" agent="Mozilla/5.0" etag="unique_etag" version="22.0.8" type="device">
+    <diagram name="Lambda Architecture" id="lambda_diagram_id">
+      <mxGraphModel dx="1434" dy="788" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <root>
+          <mxCell id="0" />
+          <mxCell id="1" parent="0" />
+          <mxCell id="source_cloud" value="Event Source" style="shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+            <mxGeometry x="360" y="40" width="120" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="kafka_queue" value="Ingestion Queue&lt;br&gt;(Kafka)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+            <mxGeometry x="360" y="160" width="120" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="raw_store_db" value="Raw Data Storage&lt;br&gt;(HDFS/S3)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+            <mxGeometry x="570" y="280" width="120" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="flink_processor" value="Stream Processor&lt;br&gt;(Flink)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="150" y="280" width="120" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="spark_processor" value="Batch Processor&lt;br&gt;(Spark/MapReduce)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+            <mxGeometry x="570" y="420" width="120" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="serving_db" value="Serving Layer&lt;br&gt;(OLAP DB)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+            <mxGeometry x="360" y="550" width="120" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="user_actor" value="User / API" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+            <mxGeometry x="610" y="565" width="30" height="60" as="geometry" />
+          </mxCell>
+          <mxCell id="speed_layer_box" value="Speed Layer (Real-time)" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="110" y="260" width="200" height="120" as="geometry" />
+          </mxCell>
+          <mxCell id="batch_layer_box" value="Batch Layer (Periodic)" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;strokeColor=#666666;" vertex="1" parent="1">
+            <mxGeometry x="530" y="260" width="200" height="260" as="geometry" />
+          </mxCell>
+          <mxCell id="edge_source_kafka" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="source_cloud" target="kafka_queue">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="edge_kafka_flink" value="Stream" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="kafka_queue" target="flink_processor">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="420" y="280" as="targetPoint" />
+              <Array as="points">
+                <mxPoint x="420" y="280" />
+                <mxPoint x="210" y="280" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+          <mxCell id="edge_kafka_rawstore" value="Archive Raw Events" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="kafka_queue" target="raw_store_db">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="630" y="240" />
+                <mxPoint x="630" y="280" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+          <mxCell id="edge_flink_serving" value="Write Real-time Aggregates&lt;br&gt;(Fast, Approx.)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;align=left;verticalAlign=bottom;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="flink_processor" target="serving_db">
+            <mxGeometry x="-0.503" y="40" relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="210" y="590" />
+                <mxPoint x="360" y="590" />
+              </Array>
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+          <mxCell id="edge_rawstore_spark" value="Read Raw Events&lt;br&gt;(Daily/Hourly)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;align=left;verticalAlign=top;" edge="1" parent="1" source="raw_store_db" target="spark_processor">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+          <mxCell id="edge_spark_serving" value="Write Batch Aggregates&lt;br&gt;(Slow, Accurate)&lt;br&gt;(Upserts/Overwrites)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;align=left;verticalAlign=bottom;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="spark_processor" target="serving_db">
+            <mxGeometry x="-0.6154" y="10" relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="570" y="590" />
+                <mxPoint x="480" y="590" />
+              </Array>
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+          <mxCell id="edge_user_serving" value="Query Combined View&lt;br&gt;(Prefers Batch Data)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;align=left;verticalAlign=top;" edge="1" parent="1" source="user_actor" target="serving_db">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+               <mxPoint x="625" y="610" />
+               <mxPoint x="480" y="610" />
+             </Array>
+            </mxGeometry>
+          </mxCell>
+        </root>
+      </mxGraphModel>
+    </diagram>
+  </mxfile>

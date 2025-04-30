@@ -1,0 +1,128 @@
+<mxfile host="app.diagrams.net" modified="2024-03-15T12:30:00.000Z" agent="CheckpointDiagramGenerator" etag="flink-checkpointing-1" version="24.0.4" type="device">
+    <diagram name="Flink-Checkpointing" id="CheckpointDiagramLayer">
+      <mxGraphModel dx="1500" dy="1600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+        <root>
+          <mxCell id="0" />
+          <mxCell id="1" parent="0" />
+  
+          <mxCell id="title-cp" value="&lt;b&gt;数据处理层: Flink Checkpoint 容错机制&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+            <mxGeometry x="300" y="1250" width="500" height="30" as="geometry" />
+          </mxCell>
+  
+          <!-- Section 1: Normal Operation & Checkpointing -->
+          <mxCell id="title-normal" value="&lt;b&gt;1. 正常运行与状态快照 (Normal Operation &amp; Checkpointing)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="1">
+            <mxGeometry x="50" y="1300" width="450" height="20" as="geometry" />
+          </mxCell>
+          <mxCell id="kafka-source-norm" value="输入数据流&lt;br&gt;(Input Stream&lt;br&gt;from Kafka)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="80" y="1380" width="80" height="100" as="geometry" />
+          </mxCell>
+          <mxCell id="task-manager-norm" value="Flink Task Manager / Operator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+            <mxGeometry x="240" y="1350" width="140" height="160" as="geometry" />
+          </mxCell>
+          <mxCell id="internal-state" value="内部状态&lt;br&gt;(Internal State)&lt;br&gt;&lt;i&gt;e.g., window sums,&lt;br&gt;operator state&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;dashed=1;strokeColor=#666666;" vertex="1" parent="1">
+            <mxGeometry x="255" y="1390" width="110" height="70" as="geometry" />
+          </mxCell>
+          <mxCell id="output-stream-norm" value="输出数据流&lt;br&gt;(Output Stream)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+             <mxGeometry x="460" y="1380" width="80" height="100" as="geometry" />
+          </mxCell>
+          <mxCell id="durable-storage" value="持久化存储&lt;br&gt;(Durable Storage)&lt;br&gt;&lt;i&gt;e.g., HDFS, S3&lt;/i&gt;" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="230" y="1580" width="160" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="checkpoint-1" value="Checkpoint #N" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="245" y="1600" width="50" height="40" as="geometry" />
+          </mxCell>
+          <mxCell id="checkpoint-2" value="Checkpoint #N+1" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+             <mxGeometry x="315" y="1600" width="60" height="40" as="geometry" />
+          </mxCell>
+  
+          <mxCell id="arrow-input-norm" value="Data In" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="kafka-source-norm" target="task-manager-norm">
+            <mxGeometry width="50" height="50" relative="1" as="geometry">
+              <mxPoint x="170" y="1430" as="sourcePoint" />
+              <mxPoint x="220" y="1380" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+          <mxCell id="arrow-output-norm" value="Processed Data" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="task-manager-norm" target="output-stream-norm">
+             <mxGeometry width="50" height="50" relative="1" as="geometry">
+               <mxPoint x="390" y="1430" as="sourcePoint" />
+               <mxPoint x="440" y="1380" as="targetPoint" />
+             </mxGeometry>
+          </mxCell>
+          <mxCell id="arrow-checkpoint" value="定期保存状态快照&lt;br&gt;(Periodically Save State Snapshot)" style="endArrow=classic;html=1;rounded=0;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="internal-state" target="durable-storage">
+             <mxGeometry width="50" height="50" relative="1" as="geometry">
+               <mxPoint x="310" y="1510" as="sourcePoint" />
+               <mxPoint x="360" y="1560" as="targetPoint" />
+               <Array as="points">
+                 <mxPoint x="310" y="1550"/>
+               </Array>
+             </mxGeometry>
+          </mxCell>
+  
+          <!-- Section 2: Failure & Recovery -->
+           <mxCell id="title-recovery" value="&lt;b&gt;2. 节点故障与恢复 (Failure &amp; Recovery)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="1">
+             <mxGeometry x="580" y="1300" width="450" height="20" as="geometry" />
+           </mxCell>
+            <mxCell id="task-manager-fail" value="Flink Task Manager / Operator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+              <mxGeometry x="620" y="1350" width="140" height="100" as="geometry" />
+           </mxCell>
+           <mxCell id="fail-symbol" value="X" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=48;fontColor=#FF0000;fontStyle=1" vertex="1" parent="1">
+               <mxGeometry x="660" y="1370" width="60" height="60" as="geometry"/>
+           </mxCell>
+            <mxCell id="fail-label" value="节点故障! (Node Failure!)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#FF0000;" vertex="1" parent="1">
+               <mxGeometry x="640" y="1450" width="100" height="20" as="geometry"/>
+           </mxCell>
+  
+           <mxCell id="arrow-fail-path" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;strokeColor=#b85450;" edge="1" parent="1">
+               <mxGeometry width="50" height="50" relative="1" as="geometry">
+                   <mxPoint x="780" y="1400" as="sourcePoint"/>
+                   <mxPoint x="840" y="1400" as="targetPoint"/>
+               </mxGeometry>
+           </mxCell>
+  
+           <mxCell id="task-manager-recover" value="新 Task Manager / Operator 启动&lt;br&gt;(New Task Manager Starts)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+             <mxGeometry x="860" y="1350" width="140" height="160" as="geometry" />
+           </mxCell>
+           <mxCell id="recovered-state" value="恢复的状态&lt;br&gt;(Restored State)&lt;br&gt;&lt;i&gt;from Checkpoint #N+1&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;dashed=1;strokeColor=#666666;" vertex="1" parent="1">
+             <mxGeometry x="875" y="1390" width="110" height="70" as="geometry" />
+           </mxCell>
+            <mxCell id="durable-storage-recover" value="持久化存储&lt;br&gt;(Durable Storage)" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+              <mxGeometry x="850" y="1580" width="160" height="80" as="geometry" />
+           </mxCell>
+           <mxCell id="checkpoint-recover" value="Checkpoint #N+1&lt;br&gt;(Latest Success)" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#82b366;fontColor=#008000;fontStyle=1" vertex="1" parent="1">
+              <mxGeometry x="880" y="1600" width="100" height="50" as="geometry" />
+           </mxCell>
+           <mxCell id="kafka-source-recover" value="从上次 Checkpoint&lt;br&gt;对应的 Offset&lt;br&gt;继续读取" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+             <mxGeometry x="660" y="1500" width="100" height="110" as="geometry" />
+           </mxCell>
+            <mxCell id="output-stream-recover" value="继续输出&lt;br&gt;(Resume Output)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+               <mxGeometry x="1080" y="1380" width="80" height="100" as="geometry" />
+            </mxCell>
+  
+           <mxCell id="arrow-restore" value="1. 加载最新状态快照&lt;br&gt;(Load Latest State Snapshot)" style="endArrow=classic;html=1;rounded=0;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="durable-storage-recover" target="recovered-state">
+             <mxGeometry width="50" height="50" relative="1" as="geometry">
+               <mxPoint x="930" y="1530" as="sourcePoint" />
+               <mxPoint x="980" y="1480" as="targetPoint" />
+                <Array as="points">
+                 <mxPoint x="930" y="1540"/>
+               </Array>
+             </mxGeometry>
+           </mxCell>
+            <mxCell id="arrow-input-recover" value="2. 从断点处继续消费&lt;br&gt;(Resume Consumption)" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="kafka-source-recover" target="task-manager-recover">
+              <mxGeometry width="50" height="50" relative="1" as="geometry">
+                <mxPoint x="770" y="1480" as="sourcePoint" />
+                <mxPoint x="820" y="1430" as="targetPoint" />
+                <Array as="points">
+                  <mxPoint x="810" y="1555"/>
+                  <mxPoint x="810" y="1430"/>
+                </Array>
+              </mxGeometry>
+            </mxCell>
+            <mxCell id="arrow-output-recover" value="3. 继续处理和输出&lt;br&gt;(Resume Processing &amp; Output)" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="task-manager-recover" target="output-stream-recover">
+               <mxGeometry width="50" height="50" relative="1" as="geometry">
+                 <mxPoint x="1010" y="1430" as="sourcePoint" />
+                 <mxPoint x="1060" y="1380" as="targetPoint" />
+               </mxGeometry>
+            </mxCell>
+        </root>
+      </mxGraphModel>
+    </diagram>
+  </mxfile>

@@ -1,0 +1,145 @@
+<mxfile host="app.diagrams.net" modified="2024-03-15T11:45:00.000Z" agent="HotspotDiagramGenerator" etag="kafka-hotspot-mitigation-1" version="24.0.4" type="device">
+    <diagram name="Kafka-Hotspot-Mitigation" id="KafkaHotspotDiagramLayer">
+      <mxGraphModel dx="1468" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+        <root>
+          <mxCell id="0" />
+          <mxCell id="1" parent="0" />
+  
+          <!-- Diagram A: Hotspot Issue -->
+          <mxCell id="title-a" value="&lt;b&gt;图 A: 按 ad_id 分区导致热点&lt;/b&gt;&lt;br&gt;(Hotspot with ad_id partitioning)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+            <mxGeometry x="40" y="480" width="400" height="40" as="geometry" />
+          </mxCell>
+          <mxCell id="source-a" value="广告事件流 (Event Stream)&lt;br&gt;Event(ad_id=123) &lt;font color=&quot;#FF0000&quot;&gt;&lt;b&gt;(热门)&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Event(ad_id=999)&lt;br&gt;Event(ad_id=123) &lt;font color=&quot;#FF0000&quot;&gt;&lt;b&gt;(热门)&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Event(ad_id=456)&lt;br&gt;Event(ad_id=123) &lt;font color=&quot;#FF0000&quot;&gt;&lt;b&gt;(热门)&lt;/b&gt;&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;spacingLeft=5;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+            <mxGeometry x="40" y="540" width="150" height="120" as="geometry" />
+          </mxCell>
+          <mxCell id="partitioner-a" value="Kafka Partitioner&lt;br&gt;&lt;b&gt;Key = ad_id&lt;/b&gt;&lt;br&gt;&lt;i&gt;partition = hash(key) % 3&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="230" y="570" width="130" height="60" as="geometry" />
+          </mxCell>
+          <mxCell id="partition-a0" value="Partition 0" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="400" y="540" width="60" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="partition-a1" value="Partition 1&lt;br&gt;&lt;font color=&quot;#FF0000&quot;&gt;&lt;b&gt;写入热点&lt;br&gt;(Write Hotspot)&lt;/b&gt;&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;" vertex="1" parent="1">
+            <mxGeometry x="400" y="640" width="60" height="100" as="geometry" />
+          </mxCell>
+          <mxCell id="partition-a2" value="Partition 2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="400" y="760" width="60" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-a-source" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="source-a" target="partitioner-a">
+            <mxGeometry width="50" height="50" relative="1" as="geometry">
+              <mxPoint x="200" y="600" as="sourcePoint" />
+              <mxPoint x="250" y="550" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+          <mxCell id="arrow-a-999" value="ad_id=999" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontSize=9;" edge="1" parent="1" source="partitioner-a" target="partition-a0">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="370" y="600" as="sourcePoint" />
+              <Array as="points">
+                <mxPoint x="370" y="580"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-a-123-1" value="ad_id=123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontColor=#FF0000;fontSize=9;" edge="1" parent="1" source="partitioner-a" target="partition-a1">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="370" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="370" y="680"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-a-123-2" value="ad_id=123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontColor=#FF0000;fontSize=9;" edge="1" parent="1" source="partitioner-a" target="partition-a1">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="370" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="370" y="690"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-a-123-3" value="ad_id=123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontColor=#FF0000;fontSize=9;" edge="1" parent="1" source="partitioner-a" target="partition-a1">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="370" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="370" y="700"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-a-456" value="ad_id=456" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontSize=9;" edge="1" parent="1" source="partitioner-a" target="partition-a2">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="370" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="370" y="800"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+  
+          <!-- Diagram B: Mitigation -->
+          <mxCell id="title-b" value="&lt;b&gt;图 B: 按 ad_id + 随机后缀缓解热点&lt;/b&gt;&lt;br&gt;(Mitigation with ad_id + random_suffix)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+            <mxGeometry x="550" y="480" width="400" height="40" as="geometry" />
+          </mxCell>
+           <mxCell id="source-b" value="广告事件流 (Event Stream)&lt;br&gt;Event(ad_id=123) &lt;font color=&quot;#FF0000&quot;&gt;&lt;b&gt;(热门)&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Event(ad_id=999)&lt;br&gt;Event(ad_id=123) &lt;font color=&quot;#FF0000&quot;&gt;&lt;b&gt;(热门)&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Event(ad_id=456)&lt;br&gt;Event(ad_id=123) &lt;font color=&quot;#FF0000&quot;&gt;&lt;b&gt;(热门)&lt;/b&gt;&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;align=left;spacingLeft=5;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+            <mxGeometry x="550" y="540" width="150" height="120" as="geometry" />
+          </mxCell>
+          <mxCell id="partitioner-b" value="Kafka Partitioner&lt;br&gt;&lt;b&gt;Key = ad_id + '_' + random_suffix&lt;/b&gt;&lt;br&gt;&lt;i&gt;e.g., 123_abc, 999_xyz, 123_def ...&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+            <mxGeometry x="740" y="570" width="160" height="60" as="geometry" />
+          </mxCell>
+          <mxCell id="partition-b0" value="Partition 0" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="940" y="540" width="60" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="partition-b1" value="Partition 1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="940" y="640" width="60" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="partition-b2" value="Partition 2" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+            <mxGeometry x="940" y="740" width="60" height="80" as="geometry" />
+          </mxCell>
+          <mxCell id="load-b" value="负载更均衡&lt;br&gt;(More Balanced Load)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#008000;" vertex="1" parent="1">
+             <mxGeometry x="920" y="830" width="100" height="30" as="geometry" />
+          </mxCell>
+          <mxCell id="arrow-b-source" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="source-b" target="partitioner-b">
+             <mxGeometry width="50" height="50" relative="1" as="geometry">
+              <mxPoint x="700" y="600" as="sourcePoint" />
+              <mxPoint x="750" y="550" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-b-123-1" value="123_abc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontColor=#FF0000;fontSize=9;" edge="1" parent="1" source="partitioner-b" target="partition-b1">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="910" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="910" y="680"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-b-999" value="999_xyz" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontSize=9;" edge="1" parent="1" source="partitioner-b" target="partition-b0">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="910" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="910" y="580"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-b-123-2" value="123_def" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontColor=#FF0000;fontSize=9;" edge="1" parent="1" source="partitioner-b" target="partition-b0">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="910" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="910" y="590"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-b-456" value="456_pqr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontSize=9;" edge="1" parent="1" source="partitioner-b" target="partition-b2">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="910" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="910" y="780"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+           <mxCell id="arrow-b-123-3" value="123_ghi" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontColor=#FF0000;fontSize=9;" edge="1" parent="1" source="partitioner-b" target="partition-b2">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="910" y="600" as="sourcePoint" />
+               <Array as="points">
+                <mxPoint x="910" y="790"/>
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </root>
+      </mxGraphModel>
+    </diagram>
+  </mxfile>
