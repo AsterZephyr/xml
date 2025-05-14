@@ -1,0 +1,316 @@
+<architecturediagram name="riskmanagementandantifraudarchitecture">
+
+    <triggercategories>
+      <trigger id="trigger_frontend" name="广告主前端行为触发"/>
+      <trigger id="trigger_backend" name="广告主后端行为触发"/>
+      <trigger id="trigger_content" name="风控内容检测触发"/>
+    </triggercategories>
+  
+    <mainlayers>
+      <layer id="layer_perception" name="风险感知层">
+        <module id="module_sample_center" name="样本中心">
+          <item id="item_biz_sample" name="业务样本"/>
+          <item id="item_bw_sample_lib" name="黑白样本库"/>
+          <item id="item_strategy_sample_lib" name="策略样本库"/>
+          <item id="item_model_sample" name="模型样本"/>
+        </module>
+        <module id="module_monitoring_alerting" name="监控预警">
+          <item id="item_realtime_dashboard" name="实时监控大盘"/>
+          <item id="item_core_metric_alert" name="核心指标预警"/>
+          <item id="item_case_alert" name="case报警"/>
+          <item id="item_risk_event_alert" name="风险事件报警"/>
+        </module>
+        <module id="module_datasource_mgmt" name="数据源管理">
+          <item id="item_biz_data" name="业务数据"/>
+          <item id="item_customer_data" name="客户数据"/>
+          <item id="item_thirdparty_data" name="第三方数据"/>
+          <item id="item_labeled_data" name="标注数据"/>
+        </module>
+      </layer>
+  
+      <layer id="layer_decision" name="风险决策层">
+        <module id="module_list_mgmt" name="名单库管理">
+          <item id="item_blacklist" name="黑名单库"/>
+          <item id="item_whitelist" name="白名单库"/>
+          <item id="item_greylist" name="灰名单库"/>
+          <item id="item_watchlist" name="关注名单库"/>
+          <item id="item_ip_list" name="ip名单库"/>
+          <item id="item_device_list" name="设备名单库"/>
+          <item id="item_account_list" name="账户名单库"/>
+          <item id="item_user_list" name="用户名单库"/>
+        </module>
+        <module id="module_population_event_lib" name="人群事件库">
+          <item id="item_population_pack" name="人群包"/>
+          <item id="item_event_set" name="事件集"/>
+          <item id="item_rule_set_lib" name="规则集"/> <item id="item_alert_set" name="预警集"/>
+        </module>
+        <module id="module_decision_engine" name="决策引擎">
+          <submodule id="submodule_rule_engine" name="规则引擎">
+            <property name="components" value="policy, rules, score, weights"/>
+          </submodule>
+          <submodule id="submodule_model_engine" name="模型引擎">
+            <property name="algorithms" value="dnn, gnn, xgboost, rf, lr"/>
+          </submodule>
+          <submodule id="submodule_strategy_center" name="策略中心">
+            <item id="item_ab_test" name="ab test"/>
+            <item id="item_strategy_orchestration" name="策略编排"/>
+            <item id="item_version_mgmt_strategy" name="版本管理"/>
+            <item id="item_strategy_approval" name="策略审批"/>
+          </submodule>
+        </module>
+      </layer>
+  
+      <layer id="layer_disposal" name="风险处置层">
+        <module id="module_disposal_strategy" name="处置策略">
+          <item id="item_manual_review" name="人工审核"/>
+          <subitemset id="subitem_auto_processing" name="自动处理">
+            <item name="拦截"/>
+            <item name="阻断"/>
+            <item name="延迟"/>
+            <item name="降权"/>
+            <item name="打压"/>
+            <item name="放行"/>
+            <item name="免审"/>
+          </subitemset>
+          <item id="item_auto_alert" name="自动报警"/>
+        </module>
+        <module id="module_disposal_mid_platform" name="处置中台">
+          <item id="item_review_platform" name="审核平台"/>
+          <item id="item_appeal_platform" name="申诉平台"/>
+          <item id="item_evidence_chain_center" name="证据链中心"/>
+        </module>
+        <module id="module_disposal_loop" name="处置闭环">
+          <item id="item_strategy_tuning" name="策略调优"/>
+          <item id="item_model_tuning" name="模型调优"/>
+          <item id="item_sample_recycle" name="样本回收"/>
+        </module>
+      </layer>
+    </mainlayers>
+  
+    <processflows>
+      <process id="process_sample_construction" name="样本构建过程">
+        <step id="step_sample_source" name="样本来源">
+          <item name="策略判责"/>
+          <item name="人工审核"/>
+          <item name="用户反馈"/>
+          <item name="case举报"/>
+        </step>
+        <step id="step_data_preprocessing_sample" name="数据预处理">
+          <item name="关联用户"/>
+          <item name="关联客体"/>
+          <item name="关联场景"/>
+        </step>
+        <step id="step_sample_labeling" name="样本标注">
+          <item name="人工标注"/>
+          <item name="自动标注"/>
+          <item name="算法标注"/>
+        </step>
+        <step id="step_sample_storage" name="样本入库">
+          <item name="黑白样本"/>
+          <item name="策略样本"/>
+          <item name="模型样本"/>
+        </step>
+      </process>
+  
+      <process id="process_feature_production" name="特征生产过程">
+        <step id="step_datasource_feature" name="数据源">
+          <item name="行为日志"/>
+          <item name="内容数据"/>
+          <item name="客户数据"/>
+          <item name="订单数据"/>
+          <item name="广告数据"/>
+          <item name="曝光数据"/>
+          <item name="点击数据"/>
+          <item name="转化数据"/>
+        </step>
+        <step id="step_feature_engineering" name="特征工程">
+          <substep id="substep_feature_extraction" name="特征提取">
+            <property name="types" value="k-v特征, 序列特征, 图特征, nlp特征"/>
+          </substep>
+          <substep id="substep_feature_processing" name="特征处理">
+            <property name="methods" value="离散化, 归一化, 标准化, 平滑"/>
+          </substep>
+          <substep id="substep_feature_selection" name="特征选择">
+            <property name="methods" value="过滤式, 包裹式, 嵌入式"/>
+          </substep>
+          <substep id="substep_feature_monitoring" name="特征监控">
+            <property name="aspects" value="有效性, 覆盖度, 稳定性"/>
+          </substep>
+        </step>
+      </process>
+    </processflows>
+  
+    <infrastructure>
+      <infralayer id="infra_data_ingestion" name="数据接入层">
+        <component id="comp_realtime_ingestion" name="实时数据接入">
+          <technology name="kafka"/>
+          <technology name="pulsar"/>
+        </component>
+        <component id="comp_offline_ingestion" name="离线数据接入">
+          <technology name="spark"/>
+          <technology name="hive"/>
+          <technology name="doris"/>
+        </component>
+        <component id="comp_external_data_ingestion" name="外部数据">
+          <technology name="api接口"/>
+          <technology name="文件传输(sftp/ftp)"/>
+        </component>
+      </infralayer>
+  
+      <infralayer id="infra_feature_calculation" name="特征计算层">
+        <component id="comp_streaming_engine" name="流式计算引擎">
+          <technology name="flink"/>
+          <technology name="spark streaming"/>
+        </component>
+        <component id="comp_realtime_feature_calc" name="实时特征计算">
+          <property name="methods" value="udf/udaf, groupbykey, window, join"/>
+        </component>
+        <component id="comp_offline_feature_calc" name="离线特征计算">
+          <property name="methods" value="sql, mr, sparksql"/>
+        </component>
+        <component id="comp_graph_engine" name="图计算引擎">
+          <technology name="plato"/>
+          <technology name="graphscope"/>
+        </component>
+        <component id="comp_feature_scripts" name="特征加工脚本">
+          <language name="python"/>
+          <language name="scala"/>
+          <language name="java"/>
+        </component>
+        <component id="comp_task_scheduler" name="任务调度系统">
+          <technology name="airflow"/>
+          <technology name="dolphinscheduler"/>
+        </component>
+      </infralayer>
+  
+      <infralayer id="infra_feature_storage" name="特征存储层">
+        <datastore id="ds_online_feature" name="在线特征库">
+          <technology name="hbase"/>
+          <technology name="redis"/>
+          <technology name="mysql"/>
+          <technology name="tidb"/>
+          <technology name="doris"/>
+        </datastore>
+        <datastore id="ds_offline_feature" name="离线特征库">
+          <technology name="hive"/>
+          <technology name="hdfs"/>
+          <technology name="iceberg"/>
+          <technology name="hudi"/>
+        </datastore>
+        <datastore id="ds_vector_feature" name="向量特征库">
+          <technology name="faiss"/>
+          <technology name="milvus"/>
+        </datastore>
+        <datastore id="ds_graph_feature" name="图特征库">
+          <technology name="tugraph"/>
+          <technology name="nebulagraph"/>
+          <technology name="neo4j"/>
+        </datastore>
+        <platform id="platform_feature" name="特征平台">
+          <feature name="特征注册"/>
+          <feature name="特征发现"/>
+          <feature name="特征血缘"/>
+          <feature name="特征监控"/>
+          <feature name="版本管理"/>
+          <feature name="权限管理"/>
+        </platform>
+      </infralayer>
+    </infrastructure>
+  
+    <algorithmiteration id="algo_iteration" name="风险算法迭代 (data-in service-out)">
+      <datainputs>
+        <datainput id="data_in_behavior" name="行为数据"/>
+        <datainput id="data_in_biz" name="业务数据"/>
+        <datainput id="data_in_label" name="标注数据"/>
+        <datainput id="data_in_sample" name="样本数据"/>
+      </datainputs>
+      <coreprocesses>
+        <processitem id="proc_model_training" name="模型训练"/>
+        <processitem id="proc_model_evaluation" name="模型评估"/>
+        <processitem id="proc_model_deployment" name="模型部署"/>
+        <processitem id="proc_model_monitoring_iter" name="模型监控"/>
+      </coreprocesses>
+      <serviceoutputs>
+        <serviceoutput id="service_out_risk_id" name="风险识别模型服务"/>
+        <serviceoutput id="service_out_aux_review" name="辅助审核模型服务"/>
+        <serviceoutput id="service_out_similar_sample" name="相似样本推荐服务"/>
+        <serviceoutput id="service_out_suspicious_cluster" name="可疑行为聚类服务"/>
+      </serviceoutputs>
+  
+      <detailedflows>
+        <flow id="flow_graph_features">
+          <source ref="data_in_behavior"/> <component id="comp_model_training_platform_gf" name="模型训练平台"/>
+          <component id="comp_model_version_mgmt_gf" name="模型版本管理"/>
+          <component id="comp_model_online_inference_gf" name="模型在线推理"/>
+          <technologyset>
+            <technology name="bytedgraph"/>
+            <technology name="graphlearn"/>
+            <technology name="angel"/>
+          </technologyset>
+          <service id="service_graph_community" name="图特征&amp;社区发现算法服务"/>
+        </flow>
+        <flow id="flow_content_risk">
+          <source ref="data_in_content"/> <component id="comp_model_training_platform_cr" name="模型训练平台"/>
+          <component id="comp_model_version_mgmt_cr" name="模型版本管理"/>
+          <component id="comp_model_offline_inference_cr" name="模型离线推理"/>
+          <technologyset>
+            <technology name="spark"/>
+            <technology name="flink"/>
+            <technology name="hive"/>
+          </technologyset>
+          <service id="service_risk_content_id" name="风险内容识别算法服务"/>
+        </flow>
+        <flow id="flow_entity_risk">
+          <source ref="data_in_biz"/> <component id="comp_model_training_platform_er" name="模型训练平台"/>
+          <component id="comp_model_version_mgmt_er" name="模型版本管理"/>
+          <component id="comp_model_online_inference_er" name="模型在线推理"/>
+          <technologyset>
+            <technology name="tensorflow"/>
+            <technology name="pytorch"/>
+            <technology name="scikit-learn"/>
+          </technologyset>
+          <service id="service_risk_entity_id" name="风险主体识别算法服务"/>
+        </flow>
+        <flow id="flow_feature_platform_service">
+          <source ref="platform_feature"/>
+          <service id="service_feature_online" name="特征在线服务"/>
+        </flow>
+      </detailedflows>
+    </algorithmiteration>
+  
+    <connections>
+      <connection from="layer_perception" to="layer_decision" type="data_flow/control_flow" description="perceived risks and data to decision making"/>
+      <connection from="layer_decision" to="layer_disposal" type="control_flow" description="decision outcomes to disposal actions"/>
+      <connection from="layer_disposal" to="layer_perception" type="feedback_loop" description="disposal results and new samples back to perception (e.g., via 样本回收 to 样本中心)"/>
+      <connection from="layer_disposal" to="layer_decision" type="feedback_loop" description="disposal results for strategy/model tuning"/>
+  
+      <connection from="process_sample_construction" to="module_sample_center" type="data_output" description="constructed samples to sample center"/>
+      <connection from="step_sample_storage" to="module_sample_center" type="data_output" description="storing samples"/>
+  
+      <connection from="process_feature_production" to="infra_feature_storage" type="data_output" description="produced features to feature storage"/>
+      <connection from="step_datasource_feature" to="infra_data_ingestion" type="uses_data_from" description="feature production uses ingested data"/>
+      <connection from="infra_data_ingestion" to="infra_feature_calculation" type="data_flow" description="ingested data to feature calculation"/>
+      <connection from="infra_feature_calculation" to="infra_feature_storage" type="data_flow" description="calculated features to storage"/>
+      <connection from="infra_feature_storage" to="layer_decision" type="data_supply" description="features for decision engine"/>
+      <connection from="infra_feature_storage" to="algo_iteration" type="data_supply" description="features for algorithm iteration"/>
+  
+  
+      <connection from="data_in_behavior" to="comp_model_training_platform_gf" type="data_input"/>
+      <connection from="data_in_behavior" to="comp_model_training_platform_cr" type="data_input"/>
+      <connection from="data_in_behavior" to="comp_model_training_platform_er" type="data_input"/>
+      <connection from="comp_model_training_platform_gf" to="comp_model_version_mgmt_gf" type="model_output"/>
+      <connection from="comp_model_version_mgmt_gf" to="comp_model_online_inference_gf" type="model_deployment"/>
+      <connection from="comp_model_online_inference_gf" to="service_graph_community" type="service_provision"/>
+  
+      <connection from="platform_feature" to="service_feature_online" type="service_provision"/>
+      <connection from="service_feature_online" to="comp_model_online_inference_er" type="data_input" description="online features for entity risk model"/>
+       <connection from="service_feature_online" to="comp_model_online_inference_gf" type="data_input" description="online features for graph model"/>
+  
+  
+      <connection from="trigger_frontend" to="layer_perception" type="event_trigger" description="frontend events trigger risk perception"/>
+      <connection from="trigger_backend" to="layer_perception" type="event_trigger" description="backend events trigger risk perception"/>
+      <connection from="trigger_content" to="layer_perception" type="event_trigger" description="content detection triggers risk perception"/>
+  
+      </connections>
+  
+  </architecturediagram>
